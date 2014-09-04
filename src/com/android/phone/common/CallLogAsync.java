@@ -73,9 +73,7 @@ public class CallLogAsync {
                            int presentation,
                            int callType,
                            long timestamp,
-                           long durationInMillis,
-                           int subscription,
-                           int durationType) {
+                           long durationInMillis) {
             // Note that the context is passed each time. We could
             // have stored it in a member but we've run into a bunch
             // of memory leaks in the past that resulted from storing
@@ -100,8 +98,6 @@ public class CallLogAsync {
             this.callType = callType;
             this.timestamp = timestamp;
             this.durationInSec = (int)(durationInMillis / 1000);
-            this.durationType = durationType;
-            this.subscription = subscription;
         }
         // Since the members are accessed directly, we don't use the
         // mXxxx notation.
@@ -112,8 +108,6 @@ public class CallLogAsync {
         public final int callType;
         public final long timestamp;
         public final int durationInSec;
-        public final int durationType;
-        public final int subscription;
     }
 
     /**
@@ -166,9 +160,9 @@ public class CallLogAsync {
 
                 try {
                     // May block.
-                    result[i] = Calls.addCall(c.ci, c.context, c.number, c.presentation,
-                            c.callType, c.timestamp, c.durationInSec, c.subscription,
-                            c.durationType);
+                    result[i] = Calls.addCall(
+                            c.ci, c.context, c.number, c.presentation,
+                            c.callType, c.timestamp, c.durationInSec);
                 } catch (Exception e) {
                     // This must be very rare but may happen in legitimate cases.
                     // e.g. If the phone is encrypted and thus write request fails, it may
